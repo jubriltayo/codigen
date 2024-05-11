@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>qr code generator</title>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+    {% comment %} Url Shortener Section {% endcomment %}
+    <h1>QR Code generator</h1>
+    <form id="qrform">
+        {% csrf_token %}
+        <input id="name" type="text" name="name" placeholder="Enter content">
+        <input id="submitBtn" type="submit" value="Generate QR Code">
+    </form>
+    <br>
+    <div id='imageContainer'></div>
+
+    <script>
+        const form = document.querySelector('#qrform')
+        const imageContainer = document.querySelector('#imageContainer')
+
+        form.addEventListener('submit', handler)
+
+        function handler(e){
+            e.preventDefault()
+            $.ajax({
+                type : 'POST',
+                url : "{% url 'create_qr' %}",
+                data : $('#qrform').serialize(),
+                datatype : "json",
+                success : function(data) {
+                    $('#imageContainer').html('<img src="http://localhost:8000/' + data + '">')
+                }
+            })
+        }
+    </script>
+</body>
+</html>

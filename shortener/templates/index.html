@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>url shortener</title>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+    {% comment %} Url Shortener Section {% endcomment %}
+    <h1>Url shortener</h1>
+    <form id="myform">
+        {% csrf_token %}
+        <input id="url" type="text" name="link" placeholder="Enter URL">
+        <input id="submitBtn" type="submit" value="Generate url">
+    </form>
+    <br>
+    <p id='shortened-link'></p>
+
+
+    {% comment %} Barcodes Section {% endcomment %}
+
+
+
+    <script>
+        const form = document.querySelector('#myform')
+        const content = document.querySelector('#url')
+        const submitBtn = document.querySelector('#submitBtn')
+        const shortenedLink = document.querySelector('#shortened-link')
+
+        form.addEventListener('submit', handler)
+
+        function handler(e){
+            e.preventDefault()
+            $.ajax({
+                type : 'POST',
+                url : "{% url 'create' %}",
+                data : $('#myform').serialize(),
+                datatype : "json",
+                success : function(data) {
+                    shortenedLink.innerText = 'localhost:8000/' + data
+                }
+            })
+        }
+    </script>
+</body>
+</html>

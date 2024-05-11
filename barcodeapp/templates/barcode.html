@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode generator</title>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Barcode generator</h1>
+    <form id="barform">
+        {% csrf_token %}
+        <label for="">Name:</label>
+        <input id="name" type="text" name="name" placeholder="Type here"><br><br>
+
+        <label for="country_id">Country ID:</label>
+        <input id="country_id" type="Number" name="country_id" placeholder="Enter 1 digit"><br><br>
+        
+        <label for="manufacturer_id">Manufacturer ID:</label>
+        <input id="manufacturer_id" type="Number" name="manufacturer_id" placeholder="Enter 6 digits"><br><br>
+        
+        <label for="number_id">Number ID:</label>
+        <input id="number_id" type="Number" name="number_id" placeholder="Enter 5 digits"><br><br>
+        
+        <input id="submitBtn" type="submit" value="Generate Barcode">
+    </form>
+    <br>
+    <div id="imageContainer">
+
+    </div>
+
+
+    <script>
+        const form = document.querySelector('#barform')
+        const imageContainer = document.querySelector('#imageContainer')
+
+        form.addEventListener('submit', handler)
+
+        function handler(e){
+            e.preventDefault()
+            $.ajax({
+                type : 'POST',
+                url : "{% url 'create_bar' %}",
+                data : $('#barform').serialize(),
+                datatype : "json",
+                success : function(data) {
+                    $('#imageContainer').html('<img src="http://localhost:8000/' + data + '">');
+
+                }
+            })
+        }
+    </script>
+</body>
+</html>
